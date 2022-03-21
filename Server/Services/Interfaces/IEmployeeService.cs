@@ -8,20 +8,20 @@ namespace Server.Services.Interfaces
 {
     public interface IEmployeeService
     {
-        List<Employee> GetAll();
-        Task<Employee> Create(string name);
+        List<EmployeeModel> GetAll();
+        Task<EmployeeModel> Create(string name);
 
-        Task<Employee?> FindById(Guid id);
+        Task<EmployeeModel?> FindById(Guid id);
 
         Task Delete(Guid id);
 
-        Task Update(Employee entity);
+        Task Update(EmployeeModel entity);
 
         Task CreateLink(Guid bossId, Guid employeeId);
 
-        Task<List<Employee>> GetSlavesByBoss(Guid bossId);
+        Task<List<EmployeeModel>> GetSlavesByBoss(Guid bossId);
 
-        Task<List<Employee>> GetSquadList(Guid bossId);
-        Task<List<Employee>> GetBosses(Guid employeeId);
+        Task<List<EmployeeModel>> GetSquadList(Guid bossId);
+        Task<List<EmployeeModel>> GetBosses(Guid employeeId);
     }
 }

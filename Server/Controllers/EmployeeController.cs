@@ -21,7 +21,7 @@ namespace Server.Controllers
         }
 
         [HttpPost]
-        public async Task<Employee> Create([FromQuery] string name)
+        public async Task<EmployeeModel> Create([FromQuery] string name)
         {
             return await _service.Create(name);
         }

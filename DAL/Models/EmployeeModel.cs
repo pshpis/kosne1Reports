@@ -6,14 +6,14 @@ using DAL.ModelsExceptions;
 namespace DAL.Models
 {
     [Table("Employees")]
-    public class Employee
+    public class EmployeeModel
     {
-        public Employee()
+        public EmployeeModel()
         {
         }
         
         
-        public Employee(Guid id, string name, Guid bossId = default,  Employee? boss = null)
+        public EmployeeModel(Guid id, string name, Guid bossId = default,  EmployeeModel? boss = null)
         {
             if (id == Guid.Empty)
             {
@@ -34,7 +34,7 @@ namespace DAL.Models
         
         public string Name { get; set; }
         
-        public Employee? Boss { get; set; }
+        public EmployeeModel? Boss { get; set; }
 
         public bool IsTeamLead()
         {

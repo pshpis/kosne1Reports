@@ -21,21 +21,22 @@ namespace Server.Services
             _context = context;
         }
 
-        public List<Employee> GetAll()
+        public List<EmployeeModel> GetAll()
         {
             return _context.Employees.ToList();
         }
-        public async Task<Employee> Create(string name)
+        public async Task<EmployeeModel> Create(string name)
         {
-            var employee = new Employee(Guid.NewGuid(), name);
+            var employee = new EmployeeModel(Guid.NewGuid(), name);
             await _context.Employees.AddAsync(employee);
             await _context.SaveChangesAsync();
             return employee;
         }
 
-        public async Task<Employee?> FindById(Guid id)
+        public async Task<EmployeeModel?> FindById(Guid id)
         {
-            return await _context.Employees.FindAsync(id);
+            return await _context.Employees.Include(e => e.Boss)
+                .FirstOrDefaultAsync(e => e.Id == id);
         }
 
         public async Task Delete(Guid id)
@@ -46,7 +47,7 @@ namespace Server.Services
             await _context.SaveChangesAsync();
         }
 
-        public async Task Update(Employee entity)
+        public async Task Update(EmployeeModel entity)
         {
             _context.Employees.Update(entity);
             await _context.SaveChangesAsync();
@@ -63,7 +64,7 @@ namespace Server.Services
             await Update(employee);
         }
 
-        public async Task<List<Employee>> GetSlavesByBoss(Guid bossId)
+        public async Task<List<EmployeeModel>> GetSlavesByBoss(Guid bossId)
         {
             var boss = await FindById(bossId);
             if (boss == null) throw new WrongIdException("Wrong boss id");
@@ -71,12 +72,12 @@ namespace Server.Services
             return slaves;
         }
 
-        public async Task<List<Employee>> GetSquadList(Guid bossId)
+        public async Task<List<EmployeeModel>> GetSquadList(Guid bossId)
         {
             var boss = await FindById(bossId);
             if (boss == null) throw new WrongIdException("Wrong boss id");
             
-            List<Employee> squad = new() { boss };
+            List<EmployeeModel> squad = new() { boss };
             for (var i = 0; i < squad.Count; i++)
             {
                 var employee = squad[i].Boss;
@@ -86,19 +87,35 @@ namespace Server.Services
             return squad;
         }
 
-        public async Task<List<Employee>> GetBosses(Guid employeeId)
+        public async Task<List<EmployeeModel>> GetBosses(Guid employeeId)
         {
             var employee = await FindById(employeeId);
             if (employee == null) throw new WrongIdException("Wrong employee id");
-            if (employee.IsTeamLead()) return new List<Employee>();
+            if (employee.IsTeamLead()) return new List<EmployeeModel>();
 
-            List<Employee> bosses = new() { employee.Boss };
-            while (!bosses.Last().IsTeamLead())
+            List<EmployeeModel> bosses = new();
+            while (employee != null)
             {
-                bosses.Add(bosses.Last().Boss);
+                if (!employee.IsTeamLead())
+                {
+                    bosses.Add(employee.Boss!);
+                    employee = await FindById(employee.Boss.Id);
+                }
+                else
+                {
+                    employee = null;
+                }
             }
 
             return bosses;
+        }
+
+        public async Task Remove(Guid id)
+        {
+            var employee = await FindById(id);
+            if (employee == null) return;
+            _context.Employees.Remove(employee);
+            await _context.SaveChangesAsync();
         }
     }
 }

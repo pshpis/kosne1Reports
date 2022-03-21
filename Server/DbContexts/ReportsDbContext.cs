@@ -11,11 +11,21 @@ namespace Server.DbContexts
             Database.EnsureCreated();
         }
 
-        public DbSet<Employee> Employees { get; set; }
+        public DbSet<TaskModel> Tasks { get; set; }
+        public DbSet<EmployeeModel> Employees { get; set; }
+        
+        public DbSet<TaskChangeModel> Changes { get; set; }
+        
+        public DbSet<TaskCommentModel> Comments { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Employee>().HasOne(e => e.Boss);
+            modelBuilder.Entity<EmployeeModel>().HasOne(e => e.Boss);
+            modelBuilder.Entity<TaskModel>().HasOne(t => t.Executor);
+            modelBuilder.Entity<TaskChangeModel>().HasOne(change => change.Task);
+            modelBuilder.Entity<TaskChangeModel>().HasOne(change => change.Employee);
+            modelBuilder.Entity<TaskCommentModel>().HasOne(comment => comment.ChangeInfo);
+            
             base.OnModelCreating(modelBuilder);
         }
     }
