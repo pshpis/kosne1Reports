@@ -1,5 +1,6 @@
 ﻿using DAL.Models;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Internal;
 
 namespace Server.DbContexts
 {
@@ -14,7 +15,7 @@ namespace Server.DbContexts
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Employee>();
+            modelBuilder.Entity<Employee>().HasOne(e => e.Boss);
             base.OnModelCreating(modelBuilder);
         }
     }
