@@ -108,8 +108,8 @@ namespace Server.Controllers
         {
             try
             {
-                var task = await _service.ChangeDescription(taskId, newDescription, employeeId);
-                return Ok(task);
+                var taskChange = await _service.ChangeDescription(taskId, newDescription, employeeId);
+                return Ok(taskChange);
             }
             catch (ReportsGlobalException e)
             {
@@ -122,13 +122,12 @@ namespace Server.Controllers
         {
             try
             {
-                var task = _service.WriteComment(taskId, employeeId, text);
-                return Ok(task);
+                var comment = await _service.WriteComment(taskId, employeeId, text);
+                return Ok(comment);
             }
             catch (ReportsGlobalException e)
             {
-                Console.WriteLine(e);
-                throw;
+                return BadRequest(e.Message);
             }
         }
 

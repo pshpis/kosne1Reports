@@ -10,7 +10,7 @@ using Server.Services.Interfaces;
 
 namespace Server.Services
 {
-    public class SprintReportService
+    public class SprintReportService : ISprintReportService
     {
         private readonly ReportsDbContext _context;
         private readonly IEmployeeService _employeeService;

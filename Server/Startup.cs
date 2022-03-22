@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using DAL.Models;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -50,6 +51,7 @@ namespace Server
             services.AddScoped<IEmployeeService, EmployeeService>();
             services.AddScoped<ITaskService, TaskService>();
             services.AddScoped<IReportService, ReportService>();
+            services.AddScoped<ISprintReportService, SprintReportService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
