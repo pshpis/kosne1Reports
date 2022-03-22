@@ -8,11 +8,12 @@ namespace DAL.Models
     [Table("Reports")]
     public class ReportModel
     {
+        private DateTime _creationDate;
         public ReportModel()
         {
         }
 
-        public ReportModel(Guid id, EmployeeModel employee, DateTime dateTime, List<TaskModel> tasks, bool atCurrentSprint = true)
+        public ReportModel(Guid id, EmployeeModel employee, DateTime creationDate, List<TaskModel> tasks, bool atCurrentSprint = true)
         {
             if (id == Guid.Empty)
             {
@@ -21,14 +22,14 @@ namespace DAL.Models
 
             Id = id;
             Employee = employee;
-            DateTime = dateTime;
+            _creationDate = creationDate.ToUniversalTime();
             Tasks = tasks;
             AtCurrentSprint = atCurrentSprint;
         }
 
         public Guid Id { get; set; }
         public EmployeeModel Employee { get; set; }
-        public DateTime DateTime { get; set; }
+        public DateTime CreationDate { get => _creationDate; set => _creationDate = value.ToUniversalTime(); }
         public List<TaskModel> Tasks { get; set; }
         public bool AtCurrentSprint { get; set; }
     }

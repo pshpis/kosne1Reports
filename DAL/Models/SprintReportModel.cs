@@ -8,10 +8,11 @@ namespace DAL.Models
     [Table("SprintReports")]
     public class SprintReportModel
     {
+        private DateTime _creationDate;
         public Guid Id { get; set; }
         public List<ReportModel> Reports { get; set; }
         public EmployeeModel Employee { get; set; }
-        public DateTime CreationDate;
+        public DateTime CreationDate { get => _creationDate; set => _creationDate = value.ToUniversalTime(); }
 
         public SprintReportModel()
         {
@@ -27,7 +28,7 @@ namespace DAL.Models
             Id = id;
             Reports = reports;
             Employee = employee;
-            CreationDate = creationDate;
+            _creationDate = creationDate.ToUniversalTime();
         }
     }
 }

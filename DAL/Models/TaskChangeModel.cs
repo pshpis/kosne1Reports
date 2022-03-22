@@ -7,6 +7,7 @@ namespace DAL.Models
     [Table("Changes")]
     public class TaskChangeModel
     {
+        private DateTime _changingDate;
         public TaskChangeModel()
         {
         }
@@ -22,13 +23,19 @@ namespace DAL.Models
             if (changingDate == default)
                 throw new CreatingException(nameof(changingDate), "Date is invalid");
             
-            ChangingDate = changingDate;
+            _changingDate = changingDate.ToUniversalTime();
             Employee = employee;
         }
 
         public Guid Id { get; set; }
         public TaskModel Task { get; set; }
-        public DateTime ChangingDate { get; set; }
+
+        public DateTime ChangingDate
+        {
+            get => _changingDate;
+            set => _changingDate = value.ToUniversalTime();
+
+        }
         public EmployeeModel Employee { get; set; }
     }
 }
