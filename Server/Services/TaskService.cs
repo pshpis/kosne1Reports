@@ -7,10 +7,11 @@ using Microsoft.EntityFrameworkCore;
 using Server.DbContexts;
 using Server.ReportsExceptions.Specific;
 using Server.Services.Interfaces;
+using TaskStatus = DAL.Models.TaskStatus;
 
 namespace Server.Services
 {
-    public class TaskService
+    public class TaskService : ITaskService
     {
         private readonly ReportsDbContext _context;
         private readonly IEmployeeService _employeeService;
@@ -43,13 +44,63 @@ namespace Server.Services
                 .Where(task => task.Executor != null && task.Executor.Id == employeeId).ToList();
         }
 
+        public async Task<List<TaskModel>> GetByChanger(Guid changerId)
+        {
+            var employee = await _employeeService.FindById(changerId);
+            if (employee == null) throw new WrongIdException("Wrong employee id");
+
+            var changes = _context.Changes.Where(change => change.Employee.Id == changerId).ToList();
+            HashSet<Guid> tasksIds = new HashSet<Guid>() ;
+            changes.ForEach(change => tasksIds.Add(change.Task.Id));
+
+            List<TaskModel> tasks = new List<TaskModel>();
+            foreach (var taskId in tasksIds)
+            {
+                tasks.Add(await FindById(taskId));
+            }
+
+            return tasks;
+        }
+
         public async Task<TaskModel?> FindById(Guid id)
         {
             return await _context.Tasks.Include(t => t.Executor)
                 .FirstOrDefaultAsync(t => t.Id == id);
         }
-        
 
+        public async Task<TaskModel> SetExecutor(Guid taskId, Guid executorId)
+        {
+            var task = await FindById(taskId);
+            if (task == null) throw new WrongIdException("Wrong task id");
+
+            var employee = await _employeeService.FindById(executorId);
+            if (employee == null) throw new WrongIdException("Wrong employee id");
+
+            if (task.Status != TaskStatus.Open) throw new ForbiddenActionException("This task already has executor");
+            task.Executor = employee;
+            await Update(task);
+            return task;
+        }
+
+        public async Task ChangeStatus(Guid taskId, TaskStatus newStatus, Guid changerId)
+        {
+            var task = await FindById(taskId);
+            if (task == null) throw new WrongIdException("Wrong task id");
+
+            var employee = await _employeeService.FindById(changerId);
+            if (employee == null) throw new WrongIdException("Wrong employee id");
+
+            if (newStatus == TaskStatus.Closed)
+                throw new ForbiddenActionException("Can't set closed status to task");
+            
+            if (!employee.IsTeamLead() &&
+                task.Executor != null
+                && !await _employeeService.IsInSquad(employee.Id, task.Executor.Id))
+                throw new NotEnoughRightsException("This changer don't have enough rights");
+
+            task.Status = newStatus;
+            await Update(task);
+        }
         public async Task Remove(Guid id)
         {
             var task = await FindById(id);

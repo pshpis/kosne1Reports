@@ -65,7 +65,7 @@ namespace Server.Controllers
                 var slaves = await _service.GetSlavesByBoss(id);
                 return Ok(slaves);
             }
-            catch (ReportException e)
+            catch (ReportsGlobalException e)
             {
                 return BadRequest(e.Message);
             }
@@ -79,7 +79,7 @@ namespace Server.Controllers
                 var bosses = await _service.GetBosses(id);
                 return Ok(bosses);
             }
-            catch (ReportException e)
+            catch (ReportsGlobalException e)
             {
                 return BadRequest(e.Message);
             }
@@ -93,7 +93,7 @@ namespace Server.Controllers
                 var squad = await _service.GetSquadList(id);
                 return Ok(squad);
             }
-            catch (ReportException e)
+            catch (ReportsGlobalException e)
             {
                 return BadRequest(e.Message);
             }

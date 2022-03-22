@@ -1,8 +1,10 @@
 using System;
+using System.ComponentModel.DataAnnotations.Schema;
 using DAL.ModelsExceptions;
 
 namespace DAL.Models
 {
+    [Table("Comments")]
     public class TaskCommentModel
     {
         public TaskCommentModel()

@@ -2,7 +2,7 @@
 
 namespace Server.ReportsExceptions.Specific
 {
-    public class WrongIdException : ReportException
+    public class WrongIdException : ReportsGlobalException
     {
         public WrongIdException() : base()
         {

@@ -87,6 +87,12 @@ namespace Server.Services
             return squad;
         }
 
+        public async Task<bool> IsInSquad(Guid bossId, Guid slaveId)
+        {
+            List<EmployeeModel> squad = await GetSquadList(bossId);
+            return squad.Any(e => e.Id == slaveId);
+        }
+
         public async Task<List<EmployeeModel>> GetBosses(Guid employeeId)
         {
             var employee = await FindById(employeeId);

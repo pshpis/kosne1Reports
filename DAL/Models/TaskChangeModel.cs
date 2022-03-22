@@ -1,8 +1,10 @@
 using System;
+using System.ComponentModel.DataAnnotations.Schema;
 using DAL.ModelsExceptions;
 
 namespace DAL.Models
 {
+    [Table("Changes")]
     public class TaskChangeModel
     {
         public TaskChangeModel()

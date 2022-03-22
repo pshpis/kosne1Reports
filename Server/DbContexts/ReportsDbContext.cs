@@ -13,10 +13,9 @@ namespace Server.DbContexts
 
         public DbSet<TaskModel> Tasks { get; set; }
         public DbSet<EmployeeModel> Employees { get; set; }
-        
         public DbSet<TaskChangeModel> Changes { get; set; }
-        
         public DbSet<TaskCommentModel> Comments { get; set; }
+        public DbSet<ReportModel> Reports { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -25,7 +24,9 @@ namespace Server.DbContexts
             modelBuilder.Entity<TaskChangeModel>().HasOne(change => change.Task);
             modelBuilder.Entity<TaskChangeModel>().HasOne(change => change.Employee);
             modelBuilder.Entity<TaskCommentModel>().HasOne(comment => comment.ChangeInfo);
-            
+            modelBuilder.Entity<ReportModel>().HasOne(report => report.Employee);
+            modelBuilder.Entity<ReportModel>().HasMany(report => report.Tasks).WithOne();
+
             base.OnModelCreating(modelBuilder);
         }
     }

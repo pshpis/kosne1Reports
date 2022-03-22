@@ -1,8 +1,10 @@
 using System;
+using System.ComponentModel.DataAnnotations.Schema;
 using DAL.ModelsExceptions;
 
 namespace DAL.Models
 {
+    [Table("Tasks")]
     public class TaskModel
     {
         public Guid Id { get; set; }
@@ -10,12 +12,14 @@ namespace DAL.Models
         public string Description { get; set; }
         public EmployeeModel? Executor { get; set; }
         public DateTime CreationDate { get; set; }
+        
+        public TaskStatus Status { get; set; }
 
         public TaskModel()
         {
         }
 
-        public TaskModel(Guid id, string name, string description, EmployeeModel? executor = null, DateTime creationDate = default)
+        public TaskModel(Guid id, string name, string description, TaskStatus status = TaskStatus.Open, EmployeeModel? executor = null, DateTime creationDate = default)
         {
             if (id == Guid.Empty)
                 throw new CreatingException(nameof(id), "Id is invalid");
@@ -29,6 +33,7 @@ namespace DAL.Models
             Id = id;
             Name = name;
             Description = description;
+            Status = status;
             Executor = executor;
             CreationDate = creationDate;
         }

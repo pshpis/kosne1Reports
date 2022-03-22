@@ -23,5 +23,6 @@ namespace Server.Services.Interfaces
 
         Task<List<EmployeeModel>> GetSquadList(Guid bossId);
         Task<List<EmployeeModel>> GetBosses(Guid employeeId);
+        Task<bool> IsInSquad(Guid bossId, Guid slaveId);
     }
 }
