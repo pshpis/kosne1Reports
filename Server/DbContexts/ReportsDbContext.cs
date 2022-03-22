@@ -1,6 +1,5 @@
 ﻿using DAL.Models;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Internal;
 
 namespace Server.DbContexts
 {
@@ -16,6 +15,7 @@ namespace Server.DbContexts
         public DbSet<TaskChangeModel> Changes { get; set; }
         public DbSet<TaskCommentModel> Comments { get; set; }
         public DbSet<ReportModel> Reports { get; set; }
+        public DbSet<SprintReportModel> SprintReports { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -26,6 +26,8 @@ namespace Server.DbContexts
             modelBuilder.Entity<TaskCommentModel>().HasOne(comment => comment.ChangeInfo);
             modelBuilder.Entity<ReportModel>().HasOne(report => report.Employee);
             modelBuilder.Entity<ReportModel>().HasMany(report => report.Tasks).WithOne();
+            modelBuilder.Entity<SprintReportModel>().HasOne(spr => spr.Employee);
+            modelBuilder.Entity<SprintReportModel>().HasMany(spr => spr.Reports).WithOne();
 
             base.OnModelCreating(modelBuilder);
         }

@@ -49,6 +49,7 @@ namespace Server
             
             services.AddScoped<IEmployeeService, EmployeeService>();
             services.AddScoped<ITaskService, TaskService>();
+            services.AddScoped<IReportService, ReportService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

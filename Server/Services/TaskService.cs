@@ -44,6 +44,17 @@ namespace Server.Services
                 .Where(task => task.Executor != null && task.Executor.Id == employeeId).ToList();
         }
 
+        public async Task<List<TaskModel>> GetFinishedByExecutor(Guid employeeId)
+        {
+            var employee = await _employeeService.FindById(employeeId);
+            if (employee == null) throw new WrongIdException("Wrong employee id");
+
+            return _context.Tasks.ToList()
+                .Where(task => task.Executor != null
+                    && task.Executor.Id == employeeId
+                    && task.Status == TaskStatus.Finished).ToList();
+        }
+
         public async Task<List<TaskModel>> GetByChanger(Guid changerId)
         {
             var employee = await _employeeService.FindById(changerId);

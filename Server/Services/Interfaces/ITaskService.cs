@@ -14,6 +14,7 @@ namespace Server.Services.Interfaces
         List<TaskModel> GetAll();
 
         Task<List<TaskModel>> GetByExecutor(Guid employeeId);
+        Task<List<TaskModel>> GetFinishedByExecutor(Guid employeeId);
 
         Task<List<TaskModel>> GetByChanger(Guid changerId);
 
